@@ -1,12 +1,18 @@
 package cn.chinattclub.izou7AppServer.service.impl;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import cn.chinattclub.izou7AppServer.dao.TokenDao;
 import cn.chinattclub.izou7AppServer.dao.UserDao;
+import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
+import cn.chinattclub.izou7AppServer.entity.Token;
 import cn.chinattclub.izou7AppServer.entity.User;
 import cn.chinattclub.izou7AppServer.service.UserService;
+import cn.chinattclub.izou7AppServer.util.HmacSHA256Utils;
 import cn.chinattclub.izou7AppServer.util.PasswordHelper;
 /*
  * 用户业务逻辑类
@@ -20,6 +26,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Resource
     private PasswordHelper passwordHelper;
+	
+	@Resource
+	private TokenDao tokenDao;
 
     /**
      * 创建用户
@@ -66,5 +75,32 @@ public class UserServiceImpl implements UserService {
 	public String getKey(String username) {
 		User user = findByUsername(username);
 		return user.getKey();
+	}
+	
+	@Override
+	public boolean isUserExists(String username) {
+		User user = userDao.findByUsername(username);
+		return user==null?false:true;
+	}
+
+	@Override
+	public boolean isPass(UserLoginDto userLoginDto) {
+		User user = userDao.findByUsername(userLoginDto.getUsername());
+		PasswordHelper passwordHelper = new PasswordHelper();
+		String newPassword = passwordHelper.password(userLoginDto.getPassword(), user.getSalt(),userLoginDto.getUsername());
+		return newPassword.equals(user.getPassword())?true:false;
+	}
+
+	@Override
+	public String saveToken(UserLoginDto userLoginDto) {
+		User user = userDao.findByUsername(userLoginDto.getUsername());
+		String tokenString = HmacSHA256Utils.digest(new Date().toString(),userLoginDto.getUsername()+userLoginDto.getPassword());
+		Token token = new Token();
+		token.setToken(tokenString);
+		token.setUser(user);
+		token.setCreateTime(new Date());
+		token.setExceedTime(new Date(new Date().getTime() + 24*3600*1000));
+		tokenDao.save(token);
+		return tokenString;
 	}
 }

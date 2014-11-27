@@ -1,5 +1,6 @@
 package cn.chinattclub.izou7AppServer.service;
 
+import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
 import cn.chinattclub.izou7AppServer.entity.User;
 
 
@@ -50,4 +51,10 @@ public interface UserService {
 	 * @return
 	 */
 	public String getKey(String username);
+	
+	public boolean isUserExists(String username);
+
+	public boolean isPass(UserLoginDto userLoginDto);
+
+	public String saveToken(UserLoginDto userLoginDto);
 }

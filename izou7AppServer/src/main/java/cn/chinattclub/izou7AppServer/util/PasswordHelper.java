@@ -54,6 +54,20 @@ public class PasswordHelper {
 
         user.setPassword(newPassword);
     }
+    
+    public String password(String password,String salt,String username) {
+
+        //user.setSalt(randomNumberGenerator.nextBytes().toHex());
+
+        String newPassword = new SimpleHash(
+                algorithmName,
+                password,
+                ByteSource.Util.bytes(username+salt),
+                hashIterations).toHex();
+
+        //user.setPassword(newPassword);
+        return newPassword;
+    }
     /**
      * 
      * 生成密钥
