@@ -19,8 +19,8 @@ import cn.chinattclub.izou7AppServer.entity.User;
  */
 public interface ActivityService {
 
-	List<Activity> getActivityList(String text, int city, Date startTime, Date endTime,
-			int page);
+	List<Activity> getActivityList(String text, Integer city, Date startTime, Date endTime,
+			Integer page);
 
 
     

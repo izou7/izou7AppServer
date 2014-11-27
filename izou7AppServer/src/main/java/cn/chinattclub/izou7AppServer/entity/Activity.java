@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -30,6 +31,7 @@ public class Activity {
 	 * 用户名
 	 */
 	@ManyToOne
+	@JoinColumn(name="user")
 	@NotFound(action = NotFoundAction.IGNORE)
 	private User user;
 	
@@ -42,6 +44,7 @@ public class Activity {
 	 * 活动举办城市
 	 */
 	@ManyToOne
+	@JoinColumn(name="city")
 	private City city;
 	
 	/**

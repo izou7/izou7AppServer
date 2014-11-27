@@ -1,14 +1,18 @@
 package cn.chinattclub.izou7AppServer.dto;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import cn.chinattclub.izou7AppServer.entity.Activity;
 
 public class ActivityInfoInListDto {
 	private Integer id;
 	private String user;
 	private String name;
 	private String place;
-	private String startTime;
-	private String endTime;
+	private Date startTime;
+	private Date endTime;
 	private float distance;
 	private List<String> persons;
 	private List<String> weMedia;
@@ -36,16 +40,17 @@ public class ActivityInfoInListDto {
 	public void setPlace(String place) {
 		this.place = place;
 	}
-	public String getStartTime() {
+
+	public Date getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(String startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 	public float getDistance() {
@@ -65,6 +70,20 @@ public class ActivityInfoInListDto {
 	}
 	public void setWeMedia(List<String> weMedia) {
 		this.weMedia = weMedia;
+	}
+	public List<ActivityInfoInListDto> ConvertToDto(List<Activity> activities) {
+		List<ActivityInfoInListDto> activityInfoInListDtos = new ArrayList<ActivityInfoInListDto>();
+		for (Activity activity:activities){
+			ActivityInfoInListDto activityInfoInListDto = new ActivityInfoInListDto();
+			activityInfoInListDto.setId(activity.getId());
+			activityInfoInListDto.setName(activity.getName());
+			activityInfoInListDto.setPlace(activity.getPlace());
+			activityInfoInListDto.setUser(activity.getUser().getUserInfo().getRealName());
+			activityInfoInListDto.setStartTime(activity.getStartTime());
+			activityInfoInListDto.setEndTime(activity.getEndTime());
+			activityInfoInListDtos.add(activityInfoInListDto);
+		}
+		return activityInfoInListDtos;
 	}
 	
 	

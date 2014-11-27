@@ -30,9 +30,9 @@ public class ActivityServiceImpl implements ActivityService {
 	private ActivityDao activityDao;
 	
 	@Override
-	public List<Activity> getActivityList(String text, int city, Date startTime,
-			Date endTime, int page) {
-		return activityDao.getActivities();
+	public List<Activity> getActivityList(String text, Integer city, Date startTime,
+			Date endTime, Integer page) {
+		return activityDao.getActivities(text, city, startTime, endTime, page);
 	}
 	
 }

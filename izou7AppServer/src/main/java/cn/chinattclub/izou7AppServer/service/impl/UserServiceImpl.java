@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String saveToken(UserLoginDto userLoginDto) {
 		User user = userDao.findByUsername(userLoginDto.getUsername());
-		String tokenString = HmacSHA256Utils.digest(new Date().toString(),userLoginDto.getUsername()+userLoginDto.getPassword());
+		String tokenString = HmacSHA256Utils.digest(new Date().toString(),userLoginDto.getUsername());
 		Token token = new Token();
 		token.setToken(tokenString);
 		token.setUser(user);
