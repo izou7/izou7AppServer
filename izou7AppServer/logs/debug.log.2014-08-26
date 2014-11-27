@@ -1,0 +1,3 @@
+[2014-08-26 21:58:56,086] WARN  (DefaultHandlerExceptionResolver.java:198) - Request method 'POST' not supported
+[2014-08-26 21:59:14,080] WARN  (DefaultHandlerExceptionResolver.java:198) - Request method 'POST' not supported
+[2014-08-26 22:00:18,894] WARN  (JsonConverter.java:108) - JSON is NULL! Parsing [null] to [cn.zy.iscene.entity.User].
