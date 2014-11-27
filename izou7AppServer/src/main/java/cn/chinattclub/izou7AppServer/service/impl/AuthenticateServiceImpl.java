@@ -7,9 +7,9 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import cn.chinattclub.izou7AppServer.entity.Token;
-import cn.chinattclub.izou7AppServer.interceptor.AuthenticateInterceptor;
 import cn.chinattclub.izou7AppServer.service.AuthenticateService;
 import cn.chinattclub.izou7AppServer.service.TokenService;
 
@@ -19,6 +19,7 @@ import cn.chinattclub.izou7AppServer.service.TokenService;
  * @author zhangying.
  *         Created 2014-11-27.
  */
+@Service
 public class AuthenticateServiceImpl implements AuthenticateService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticateServiceImpl.class);

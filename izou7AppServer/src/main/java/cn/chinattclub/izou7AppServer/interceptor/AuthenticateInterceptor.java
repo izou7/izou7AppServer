@@ -25,11 +25,12 @@ public class AuthenticateInterceptor extends HandlerInterceptorAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticateInterceptor.class);
 	
 	@Resource
-	private AuthenticateService service;
+	private AuthenticateService authenticateServiceImpl;
+	
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 	                         HttpServletResponse response, Object handler) throws Exception {
 		String token = request.getHeader("token");
-		return service.authenticate(token);
+		return authenticateServiceImpl.authenticate(token);
 	}
 }

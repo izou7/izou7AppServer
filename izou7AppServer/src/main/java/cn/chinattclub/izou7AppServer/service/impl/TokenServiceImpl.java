@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
+
 import cn.chinattclub.izou7AppServer.dao.TokenDao;
 import cn.chinattclub.izou7AppServer.entity.Token;
 import cn.chinattclub.izou7AppServer.service.TokenService;
@@ -13,6 +15,7 @@ import cn.chinattclub.izou7AppServer.service.TokenService;
  * @author zhangying.
  *         Created 2014-11-27.
  */
+@Service
 public class TokenServiceImpl implements TokenService {
 
 	@Resource
