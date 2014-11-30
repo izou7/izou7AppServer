@@ -121,4 +121,36 @@ public class ActivityController {
 		response.getBody().put("data", activityInfoInListDtos);
 		return response;
 	}
+	
+	@RequestMapping(value="/myInterestActivities",method = RequestMethod.GET)
+	@ResponseBody
+	public RestResponse myInterestActivities(Integer page){
+		page = page==null?0:page;
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "查询成功";
+		List<ActivityInfoInListDto> activityInfoInListDtos = new ArrayList<ActivityInfoInListDto>();
+		
+		try{
+			String token = request.getHeader("token");
+			User user = authenticateServiceImpl.getUserName(token);
+			if (user==null){	
+				logger.error("用户不存在");
+				msg = "用户不存在";
+				statusCode = ResponseStatusCode.FORBIDDEN;
+			}
+			List<Activity> activities = activityServiceImpl.getInterestActivityList(page,user);
+			ActivityInfoInListDto activityInfoInListDto = new ActivityInfoInListDto();
+			activityInfoInListDtos = activityInfoInListDto.ConvertToDto(activities);
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		response.getBody().put("data", activityInfoInListDtos);
+		return response;
+	}
 }

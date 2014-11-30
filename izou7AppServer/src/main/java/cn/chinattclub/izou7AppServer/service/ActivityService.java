@@ -24,6 +24,8 @@ public interface ActivityService {
 
 	List<Activity> getComingActivityList(Integer page, User user);
 
+	List<Activity> getInterestActivityList(Integer page, User user);
+
 
     
 }

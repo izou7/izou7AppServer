@@ -40,5 +40,10 @@ public class ActivityServiceImpl implements ActivityService {
 		// TODO Auto-generated method stub
 		return activityDao.getComingActivityList(page, user);
 	}
+
+	@Override
+	public List<Activity> getInterestActivityList(Integer page, User user) {
+		return activityDao.getInterestActivityList(page,user);
+	}
 	
 }
