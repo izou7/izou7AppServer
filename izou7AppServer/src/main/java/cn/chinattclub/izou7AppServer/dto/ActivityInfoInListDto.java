@@ -1,5 +1,6 @@
 package cn.chinattclub.izou7AppServer.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,8 +12,8 @@ public class ActivityInfoInListDto {
 	private String user;
 	private String name;
 	private String place;
-	private Date startTime;
-	private Date endTime;
+	private String startTime;
+	private String endTime;
 	private float distance;
 	private List<String> persons;
 	private List<String> weMedia;
@@ -41,16 +42,17 @@ public class ActivityInfoInListDto {
 		this.place = place;
 	}
 
-	public Date getStartTime() {
+
+	public String getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(Date startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
-	public Date getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 	public float getDistance() {
@@ -73,14 +75,15 @@ public class ActivityInfoInListDto {
 	}
 	public List<ActivityInfoInListDto> ConvertToDto(List<Activity> activities) {
 		List<ActivityInfoInListDto> activityInfoInListDtos = new ArrayList<ActivityInfoInListDto>();
+		SimpleDateFormat time=new SimpleDateFormat("yyyy-MM-dd"); 
 		for (Activity activity:activities){
 			ActivityInfoInListDto activityInfoInListDto = new ActivityInfoInListDto();
 			activityInfoInListDto.setId(activity.getId());
 			activityInfoInListDto.setName(activity.getName());
 			activityInfoInListDto.setPlace(activity.getPlace());
 			activityInfoInListDto.setUser(activity.getUser().getUserInfo().getRealName());
-			activityInfoInListDto.setStartTime(activity.getStartTime());
-			activityInfoInListDto.setEndTime(activity.getEndTime());
+			activityInfoInListDto.setStartTime(time.format(activity.getStartTime()));
+			activityInfoInListDto.setEndTime(time.format(activity.getEndTime()));
 			activityInfoInListDtos.add(activityInfoInListDto);
 		}
 		return activityInfoInListDtos;

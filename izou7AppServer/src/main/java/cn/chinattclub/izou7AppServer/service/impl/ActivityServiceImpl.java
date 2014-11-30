@@ -34,5 +34,11 @@ public class ActivityServiceImpl implements ActivityService {
 			Date endTime, Integer page) {
 		return activityDao.getActivities(text, city, startTime, endTime, page);
 	}
+
+	@Override
+	public List<Activity> getComingActivityList(Integer page, User user) {
+		// TODO Auto-generated method stub
+		return activityDao.getComingActivityList(page, user);
+	}
 	
 }

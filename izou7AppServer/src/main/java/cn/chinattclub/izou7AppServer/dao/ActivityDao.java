@@ -40,5 +40,19 @@ public class ActivityDao  extends AdvancedHibernateDao<Activity>{
     	return criteria.list();
 		
 	}
+
+	public List<Activity> getComingActivityList(Integer page, User user) {
+		int pageNumber = StringUtils.isNotBlank(getProperty("page.default_size")) ? 
+				Integer.parseInt(getProperty("page.default_size")) : 10;
+		Criteria criteria = this.getCurrentSession().createCriteria(Activity.class);
+		criteria.add(Restrictions.eq("user", user));
+
+		criteria.add(Restrictions.between("startTime", new Date(), new Date(new Date().getTime()+24*3600*1000)));
+		
+		criteria.setFirstResult(pageNumber*page);
+		criteria.setMaxResults(pageNumber);
+		
+		return criteria.list();
+	}
 	
 }

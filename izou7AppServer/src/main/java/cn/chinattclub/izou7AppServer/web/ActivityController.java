@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -18,6 +19,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,7 @@ import cn.chinattclub.izou7AppServer.entity.Activity;
 import cn.chinattclub.izou7AppServer.entity.User;
 import cn.chinattclub.izou7AppServer.realm.StatelessRealm;
 import cn.chinattclub.izou7AppServer.service.ActivityService;
+import cn.chinattclub.izou7AppServer.service.AuthenticateService;
 import cn.chinattclub.izou7AppServer.service.UserService;
 import cn.zy.commons.util.json.JsonConverter;
 import cn.zy.commons.webdev.constant.ResponseStatusCode;
@@ -53,6 +56,12 @@ public class ActivityController {
 
 	@Resource
 	private ActivityService activityServiceImpl;
+	
+	@Resource
+	private AuthenticateService authenticateServiceImpl;
+
+	@Autowired  
+    private HttpServletRequest request;
 	
 	@RequestMapping(value="/activities",method = RequestMethod.GET)
 	@ResponseBody
@@ -80,4 +89,36 @@ public class ActivityController {
 		return response;
 		  
 	  }
+	
+	@RequestMapping(value="/myComingActivities",method = RequestMethod.GET)
+	@ResponseBody
+	public RestResponse myComingActivities(Integer page){
+		page = page==null?0:page;
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "查询成功";
+		List<ActivityInfoInListDto> activityInfoInListDtos = new ArrayList<ActivityInfoInListDto>();
+		
+		try{
+			String token = request.getHeader("token");
+			User user = authenticateServiceImpl.getUserName(token);
+			if (user==null){	
+				logger.error("用户不存在");
+				msg = "用户不存在";
+				statusCode = ResponseStatusCode.FORBIDDEN;
+			}
+			List<Activity> activities = activityServiceImpl.getComingActivityList(page,user);
+			ActivityInfoInListDto activityInfoInListDto = new ActivityInfoInListDto();
+			activityInfoInListDtos = activityInfoInListDto.ConvertToDto(activities);
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		response.getBody().put("data", activityInfoInListDtos);
+		return response;
+	}
 }

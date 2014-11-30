@@ -22,6 +22,8 @@ public interface ActivityService {
 	List<Activity> getActivityList(String text, Integer city, Date startTime, Date endTime,
 			Integer page);
 
+	List<Activity> getComingActivityList(Integer page, User user);
+
 
     
 }
