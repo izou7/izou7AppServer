@@ -1,6 +1,7 @@
 package cn.chinattclub.izou7AppServer.service;
 
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
+import cn.chinattclub.izou7AppServer.dto.UserRegistInfoDto;
 import cn.chinattclub.izou7AppServer.entity.User;
 
 
@@ -26,7 +27,7 @@ public interface UserService {
      * @param userId
      * @param newPassword
      */
-    public void changePassword(Long userId, String newPassword);
+    public void changePassword(Integer userId, String newPassword);
 
     
     /**
@@ -57,4 +58,10 @@ public interface UserService {
 	public boolean isPass(UserLoginDto userLoginDto);
 
 	public String saveToken(UserLoginDto userLoginDto);
+
+	public void addUser(UserRegistInfoDto userRegistInfoDto);
+
+	public String getEncryptPassword(String oldPassword, User user);
+
+	public void updatePasswordNew(User user, String encryptPassword);
 }

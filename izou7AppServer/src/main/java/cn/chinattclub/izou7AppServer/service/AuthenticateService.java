@@ -20,4 +20,6 @@ public interface AuthenticateService {
 	 * @return
 	 */
 	public boolean authenticate(String token);
+
+	public User getUserName(String token);
 }

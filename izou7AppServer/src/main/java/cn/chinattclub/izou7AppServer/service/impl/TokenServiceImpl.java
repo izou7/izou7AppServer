@@ -30,5 +30,12 @@ public class TokenServiceImpl implements TokenService {
 		}
 		return null;
 	}
+
+	@Override
+	public void deleteToken(String token) {
+
+		dao.deleteByToken(token);
+		
+	}
 	
 }

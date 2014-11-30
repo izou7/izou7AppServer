@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import cn.chinattclub.izou7AppServer.entity.Token;
+import cn.chinattclub.izou7AppServer.entity.User;
 import cn.chinattclub.izou7AppServer.service.AuthenticateService;
 import cn.chinattclub.izou7AppServer.service.TokenService;
 
@@ -43,6 +44,11 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			}
 		}
 		return false;
+	}
+	@Override
+	public User getUserName(String token) {
+		Token tokenObj = tokenServiceImpl.findByToken(token);
+		return tokenObj.getUser();
 	}
 	
 }

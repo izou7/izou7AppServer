@@ -72,11 +72,11 @@ public class ActivityController {
 		}catch(Exception e){
 			msg = "内部错误";
 			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		response.setMessage(msg);
 		response.setStatusCode(statusCode);
-		response.getBody().put("data", JsonConverter.format(activityInfoInListDtos));
+		response.getBody().put("data", activityInfoInListDtos);
 		return response;
 		  
 	  }

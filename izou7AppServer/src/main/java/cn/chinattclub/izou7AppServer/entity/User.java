@@ -40,6 +40,8 @@ public class User {
 	 * 密码
 	 */
 	private String password;
+	
+	private Integer source;
 	/**
 	 * 盐
 	 */
@@ -254,6 +256,14 @@ public class User {
 
 	public void setPrivacySettings(List<PrivacySettings> privacySettings) {
 		this.privacySettings = privacySettings;
+	}
+
+	public Integer getSource() {
+		return source;
+	}
+
+	public void setSource(Integer source) {
+		this.source = source;
 	}
 
 	

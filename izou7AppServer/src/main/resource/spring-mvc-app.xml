@@ -19,8 +19,10 @@
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/static/**/*" />
 			<mvc:exclude-mapping path="/*/**/login" />
-			<mvc:exclude-mapping path="/*/**/logout" />
+			<!--  <mvc:exclude-mapping path="/*/**/logout" />-->
 			<mvc:exclude-mapping path="/*/error" />
+			<mvc:exclude-mapping path="/user/user" />
+			<mvc:exclude-mapping path="/activity/activities" />
 			<bean id="AuthenticateInterceptor" class="cn.chinattclub.izou7AppServer.interceptor.AuthenticateInterceptor" />
 		</mvc:interceptor>
 		

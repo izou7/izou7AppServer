@@ -15,4 +15,6 @@ import cn.chinattclub.izou7AppServer.entity.User;
 public interface TokenService {
 
   public Token findByToken(String token);
+
+public void deleteToken(String token);
 }

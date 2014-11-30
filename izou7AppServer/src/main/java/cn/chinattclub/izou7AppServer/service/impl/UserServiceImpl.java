@@ -4,11 +4,14 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.springframework.stereotype.Service;
 
 import cn.chinattclub.izou7AppServer.dao.TokenDao;
 import cn.chinattclub.izou7AppServer.dao.UserDao;
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
+import cn.chinattclub.izou7AppServer.dto.UserRegistInfoDto;
 import cn.chinattclub.izou7AppServer.entity.Token;
 import cn.chinattclub.izou7AppServer.entity.User;
 import cn.chinattclub.izou7AppServer.service.UserService;
@@ -46,7 +49,7 @@ public class UserServiceImpl implements UserService {
      * @param userId
      * @param newPassword
      */
-    public void changePassword(Long userId, String newPassword) {
+    public void changePassword(Integer userId, String newPassword) {
         User user =userDao.get(userId);
         user.setPassword(newPassword);
         passwordHelper.encryptPassword(user);
@@ -102,5 +105,33 @@ public class UserServiceImpl implements UserService {
 		token.setExceedTime(new Date(new Date().getTime() + 24*3600*1000));
 		tokenDao.save(token);
 		return tokenString;
+	}
+
+	@Override
+	public void addUser(UserRegistInfoDto userRegistInfoDto) {
+		// TODO Auto-generated method stub
+		PasswordHelper passwordHelper = new PasswordHelper();
+		User user = new User();
+		RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
+		String salt = randomNumberGenerator.nextBytes().toHex();
+		user.setSalt(salt);
+		user.setUsername(userRegistInfoDto.getUsername());
+		user.setPassword(passwordHelper.password(userRegistInfoDto.getPassword(), salt, userRegistInfoDto.getUsername()));
+		user.setLocked(false);
+		user.setSource(0);
+		userDao.save(user);
+	}
+
+	@Override
+	public String getEncryptPassword(String oldPassword, User user) {
+		PasswordHelper passwordHelper = new PasswordHelper();
+		return passwordHelper.password(oldPassword, user.getSalt(), user.getUsername());
+	}
+
+	@Override
+	public void updatePasswordNew(User user, String encryptPassword) {
+		// TODO Auto-generated method stub
+		user.setPassword(encryptPassword);
+		userDao.update(user);
 	}
 }
