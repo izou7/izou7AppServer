@@ -84,7 +84,8 @@ public class Activity {
 	@OneToMany(mappedBy = "activity",cascade = CascadeType.ALL)
 	private List<ActivityJoin> activityJoinList;
 	
-	
+	@OneToMany(mappedBy = "activity",cascade = CascadeType.ALL)
+	private List<ActivityCooperation> activityCooperationList;
 	
 	/**
 	 * 活动标签
@@ -403,6 +404,15 @@ public class Activity {
 
 	public void setActivityJoinList(List<ActivityJoin> activityJoinList) {
 		this.activityJoinList = activityJoinList;
+	}
+
+	public List<ActivityCooperation> getActivityCooperationList() {
+		return activityCooperationList;
+	}
+
+	public void setActivityCooperationList(
+			List<ActivityCooperation> activityCooperationList) {
+		this.activityCooperationList = activityCooperationList;
 	}
 	
 	

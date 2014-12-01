@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -20,6 +21,11 @@ public class Public {
 	@GeneratedValue
 	private Integer id;
 	
+	@ManyToOne
+	@JoinColumn(name="user")
+	private User user;
+	
+		
 	@Column(name="wechat_id")
 	private String wechatId;
 	
@@ -123,6 +129,14 @@ public class Public {
 
 	public void setUserPublicSubscribe(List<UserPublicSubscribe> userPublicSubscribe) {
 		this.userPublicSubscribe = userPublicSubscribe;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 

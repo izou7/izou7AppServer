@@ -8,20 +8,21 @@ import org.springframework.stereotype.Repository;
 
 import cn.chinattclub.izou7AppServer.entity.Public;
 import cn.chinattclub.izou7AppServer.entity.User;
+import cn.chinattclub.izou7AppServer.entity.UserInfo;
 import cn.zy.commons.dao.hibernate.AdvancedHibernateDao;
 /**
- * 
+ * 活动基本信息DAO
  * @author ZY
  *
  */
 @Repository
-public class UserDao  extends AdvancedHibernateDao<User>{
+public class PublicDao  extends AdvancedHibernateDao<Public>{
 
-    public User findByUsername(String username) {
-    	Criteria criteria = this.getCurrentSession().createCriteria(
-				User.class);
-    	criteria.add(Restrictions.eq("username", username));
-		criteria.add(Restrictions.eq("locked", false));
-		return criteria.uniqueResult()==null?null:(User)criteria.uniqueResult();
-    }
+	public List<Public> getPublicList(User user) {
+		Criteria criteria = this.getCurrentSession().createCriteria(
+				Public.class);
+    	criteria.add(Restrictions.eq("user", user));
+		return criteria.list();
+	}
+	
 }

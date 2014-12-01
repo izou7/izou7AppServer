@@ -13,7 +13,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import cn.chinattclub.izou7AppServer.entity.Activity;
+import cn.chinattclub.izou7AppServer.entity.Public;
 import cn.chinattclub.izou7AppServer.entity.User;
+import cn.chinattclub.izou7AppServer.enumeration.InvitedStatus;
 import cn.zy.commons.dao.hibernate.AdvancedHibernateDao;
 import static cn.zy.commons.webdev.props.ApplicationConfiguration.getProperty;
 /**
@@ -92,6 +94,30 @@ public class ActivityDao  extends AdvancedHibernateDao<Activity>{
 		q.setFirstResult(pageNumber*page);
 		q.setMaxResults(pageNumber);
 		return q.list();
+	}
+
+	public List<Object[]> getConcernActivityList(Integer page, User user) {
+		int pageNumber = StringUtils.isNotBlank(getProperty("page.default_size")) ? 
+				Integer.parseInt(getProperty("page.default_size")) : 10;
+		Session session = this.getCurrentSession();
+		String hql = "from Activity a, ActivityJoin aj, User u, BrowsedUser bu where " +
+				"a.id=aj.activity and aj.user=u.id and u.id=bu.browsedUser and bu.user=?";
+		Query q = session.createQuery(hql);
+		q.setInteger(0, user.getId());
+		q.setFirstResult(pageNumber*page);
+		q.setMaxResults(pageNumber);
+		return q.list();
+	}
+
+	public List<Activity> getWeMediaActivityList(Integer page, List<String> wechatIdList) {
+		int pageNumber = StringUtils.isNotBlank(getProperty("page.default_size")) ? 
+				Integer.parseInt(getProperty("page.default_size")) : 10;
+		Criteria criteria = this.getCurrentSession().createCriteria(Activity.class);
+		criteria.createAlias("activityCooperationList", "acl").add(Restrictions.in("acl.wechatId", wechatIdList));
+		criteria.add(Restrictions.eq("acl.status", InvitedStatus.AGREED));
+		criteria.setFirstResult(pageNumber*page);
+		criteria.setMaxResults(pageNumber);
+		return criteria.list();
 	}
 	
 }

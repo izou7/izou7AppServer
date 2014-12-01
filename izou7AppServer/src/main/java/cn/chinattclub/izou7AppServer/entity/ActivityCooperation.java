@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -33,11 +34,13 @@ public class ActivityCooperation {
 	 * 活动
 	 */
 	@ManyToOne
+	@JoinColumn(name="activity")
 	private Activity activity;
 	
 	/**
 	 * 微信ID
 	 */
+
 	@Column(name="wechat_id")
 	private String wechatId;
 	
@@ -112,18 +115,11 @@ public class ActivityCooperation {
 		this.activity = activity;
 	}
 
-	/**
-	 * Returns the value of the field called 'wechatId'.
-	 * @return Returns the wechatId.
-	 */
+
 	public String getWechatId() {
-		return this.wechatId;
+		return wechatId;
 	}
 
-	/**
-	 * Sets the field called 'wechatId' to the given value.
-	 * @param wechatId The wechatId to set.
-	 */
 	public void setWechatId(String wechatId) {
 		this.wechatId = wechatId;
 	}

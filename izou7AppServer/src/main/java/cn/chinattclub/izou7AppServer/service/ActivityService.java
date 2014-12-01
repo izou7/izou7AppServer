@@ -28,6 +28,10 @@ public interface ActivityService {
 
 	List<Activity> getNearbyActivityList(Integer page, Float x, Float y);
 
+	List<Object[]> getConcernActivityList(Integer page, User user);
+
+	List<Activity> getWeMediaActivityList(Integer page, User user);
+
 
     
 }

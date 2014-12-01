@@ -89,6 +89,21 @@ public class ActivityInfoInListDto {
 		return activityInfoInListDtos;
 	}
 	
-	
+	public List<ActivityInfoInListDto> ConvertObjToDto(List<Object[]> activities) {
+		List<ActivityInfoInListDto> activityInfoInListDtos = new ArrayList<ActivityInfoInListDto>();
+		SimpleDateFormat time=new SimpleDateFormat("yyyy-MM-dd"); 
+		for (Object[] obj:activities){
+			Activity activity = (Activity)obj[0];
+			ActivityInfoInListDto activityInfoInListDto = new ActivityInfoInListDto();
+			activityInfoInListDto.setId(activity.getId());
+			activityInfoInListDto.setName(activity.getName());
+			activityInfoInListDto.setPlace(activity.getPlace());
+			activityInfoInListDto.setUser(activity.getUser().getUserInfo().getRealName());
+			activityInfoInListDto.setStartTime(time.format(activity.getStartTime()));
+			activityInfoInListDto.setEndTime(time.format(activity.getEndTime()));
+			activityInfoInListDtos.add(activityInfoInListDto);
+		}
+		return activityInfoInListDtos;
+	}
 	
 }
