@@ -45,5 +45,10 @@ public class ActivityServiceImpl implements ActivityService {
 	public List<Activity> getInterestActivityList(Integer page, User user) {
 		return activityDao.getInterestActivityList(page,user);
 	}
+
+	@Override
+	public List<Activity> getNearbyActivityList(Integer page, Float x, Float y) {
+		return activityDao.getNearbyActivityList(page,x,y);
+	}
 	
 }

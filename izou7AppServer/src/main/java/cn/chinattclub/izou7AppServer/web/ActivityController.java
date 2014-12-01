@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.chinattclub.izou7AppServer.dto.ActivityInfoInListDto;
@@ -153,4 +154,31 @@ public class ActivityController {
 		response.getBody().put("data", activityInfoInListDtos);
 		return response;
 	}
+	
+	@RequestMapping(value="/nearbyActivities",method = RequestMethod.GET)
+	@ResponseBody
+	public RestResponse nearbyActivities(Integer page, @RequestParam Float x, @RequestParam Float y){
+		page = page==null?0:page;
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "查询成功";
+
+		List<ActivityInfoInListDto> activityInfoInListDtos = new ArrayList<ActivityInfoInListDto>();
+		
+		try{
+			List<Activity> activities = activityServiceImpl.getNearbyActivityList(page,x,y);
+			ActivityInfoInListDto activityInfoInListDto = new ActivityInfoInListDto();
+			activityInfoInListDtos = activityInfoInListDto.ConvertToDto(activities);
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		response.getBody().put("data", activityInfoInListDtos);
+		return response;
+	}
+	
 }

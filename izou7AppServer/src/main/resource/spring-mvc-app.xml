@@ -23,6 +23,7 @@
 			<mvc:exclude-mapping path="/*/error" />
 			<mvc:exclude-mapping path="/user/user" />
 			<mvc:exclude-mapping path="/activity/activities" />
+			<mvc:exclude-mapping path="/activity/nearbyActivities" />
 			<bean id="AuthenticateInterceptor" class="cn.chinattclub.izou7AppServer.interceptor.AuthenticateInterceptor" />
 		</mvc:interceptor>
 		

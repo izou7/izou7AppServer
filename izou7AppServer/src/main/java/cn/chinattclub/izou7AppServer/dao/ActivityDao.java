@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -46,6 +48,7 @@ public class ActivityDao  extends AdvancedHibernateDao<Activity>{
 		int pageNumber = StringUtils.isNotBlank(getProperty("page.default_size")) ? 
 				Integer.parseInt(getProperty("page.default_size")) : 10;
 		Criteria criteria = this.getCurrentSession().createCriteria(Activity.class);
+		criteria.createAlias("activityJoinList", "ajl").add(Restrictions.eq("ajl.user", user));
 		//criteria.add(Restrictions.eq("user", user));
 
 		criteria.add(Restrictions.between("startTime", new Date(), new Date(new Date().getTime()+24*3600*1000)));
@@ -73,6 +76,22 @@ public class ActivityDao  extends AdvancedHibernateDao<Activity>{
 		criteria.setMaxResults(pageNumber);
 		
 		return criteria.list();
+	}
+
+	public List<Activity> getNearbyActivityList(Integer page, Float x, Float y) {
+		int pageNumber = StringUtils.isNotBlank(getProperty("page.default_size")) ? 
+				Integer.parseInt(getProperty("page.default_size")) : 10;
+		
+		Session session = this.getCurrentSession();
+		String hql = "from Activity where (coordinate_x-?)*(coordinate_x-?)+(coordinate_y-?)*(coordinate_y-?)<10000";
+		Query q = session.createQuery(hql);
+		q.setFloat(0, x);
+		q.setFloat(1, x);
+		q.setFloat(2, y);
+		q.setFloat(3, y);
+		q.setFirstResult(pageNumber*page);
+		q.setMaxResults(pageNumber);
+		return q.list();
 	}
 	
 }

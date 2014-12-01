@@ -26,6 +26,8 @@ public interface ActivityService {
 
 	List<Activity> getInterestActivityList(Integer page, User user);
 
+	List<Activity> getNearbyActivityList(Integer page, Float x, Float y);
+
 
     
 }

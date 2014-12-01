@@ -1,13 +1,16 @@
 package cn.chinattclub.izou7AppServer.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.NotFound;
@@ -77,6 +80,11 @@ public class Activity {
 	 */
 	@Column(name = "head_count")
 	private Integer headCount;
+	
+	@OneToMany(mappedBy = "activity",cascade = CascadeType.ALL)
+	private List<ActivityJoin> activityJoinList;
+	
+	
 	
 	/**
 	 * 活动标签
@@ -387,6 +395,14 @@ public class Activity {
 	 */
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public List<ActivityJoin> getActivityJoinList() {
+		return activityJoinList;
+	}
+
+	public void setActivityJoinList(List<ActivityJoin> activityJoinList) {
+		this.activityJoinList = activityJoinList;
 	}
 	
 	
