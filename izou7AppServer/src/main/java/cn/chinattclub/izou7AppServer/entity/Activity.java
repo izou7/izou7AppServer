@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -87,6 +88,8 @@ public class Activity {
 	@OneToMany(mappedBy = "activity",cascade = CascadeType.ALL)
 	private List<ActivityCooperation> activityCooperationList;
 	
+	@OneToMany(mappedBy = "activity",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	private List<ActivityPoster> activityPosterList;
 	/**
 	 * 活动标签
 	 */
@@ -413,6 +416,14 @@ public class Activity {
 	public void setActivityCooperationList(
 			List<ActivityCooperation> activityCooperationList) {
 		this.activityCooperationList = activityCooperationList;
+	}
+
+	public List<ActivityPoster> getActivityPosterList() {
+		return activityPosterList;
+	}
+
+	public void setActivityPosterList(List<ActivityPoster> activityPosterList) {
+		this.activityPosterList = activityPosterList;
 	}
 	
 	

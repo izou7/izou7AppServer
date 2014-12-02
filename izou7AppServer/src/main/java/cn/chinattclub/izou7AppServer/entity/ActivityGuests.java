@@ -39,6 +39,7 @@ public class ActivityGuests {
 	 * 活动
 	 */
 	@ManyToOne
+	@JoinColumn(name="activity")
 	private Activity activity;
 	
 	/**

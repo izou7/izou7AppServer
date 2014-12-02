@@ -1,7 +1,11 @@
 package cn.chinattclub.izou7AppServer.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import cn.chinattclub.izou7AppServer.entity.Activity;
+import cn.chinattclub.izou7AppServer.entity.ActivityPoster;
 
 public class ActivityDetailInfoDto {
 	List<String> poster;
@@ -111,6 +115,34 @@ public class ActivityDetailInfoDto {
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	
+	public void ConvertToDto(Activity activity) {
+		if (activity.getActivityPosterList()==null){
+			this.setPoster(null);
+		}else{
+			List<String> posters = new ArrayList<String>();
+			for (ActivityPoster activityPoster:activity.getActivityPosterList()){
+				posters.add(activityPoster.getPoster());
+			}
+			this.setPoster(posters);
+		}
+		
+		this.setUser(activity.getUser().getUsername());
+		this.setName(activity.getName());
+		this.setTags(activity.getTags());
+		this.setPlace(activity.getPlace());
+		this.setCity(activity.getCity().getCity());
+		this.setOpened(activity.getOpened());
+		this.setCoordinateX(activity.getCoordinateX());
+		this.setCoordinateY(activity.getCoordinateY());
+		this.setCreateTime(activity.getCreateTime());
+		this.setEndTime(activity.getEndTime());
+		this.setHeadCount(activity.getHeadCount());
+		this.setHomePage(activity.getHomepage());
+		this.setIntroduction(activity.getIntroduction());
+		this.setStartTime(activity.getStartTime());
+		
 	}
 	
 	

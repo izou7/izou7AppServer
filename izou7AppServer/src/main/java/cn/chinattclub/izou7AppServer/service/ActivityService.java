@@ -3,6 +3,7 @@ package cn.chinattclub.izou7AppServer.service;
 import java.util.Date;
 import java.util.List;
 
+import cn.chinattclub.izou7AppServer.dto.ActivityRegistrationDto;
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
 import cn.chinattclub.izou7AppServer.entity.Activity;
 import cn.chinattclub.izou7AppServer.entity.User;
@@ -32,6 +33,15 @@ public interface ActivityService {
 
 	List<Activity> getWeMediaActivityList(Integer page, User user);
 
+	Activity getActivityHomePage(Integer id);
 
+	void addJoinActivity(Integer id, User user);
+
+	boolean hasJoined(Integer id, User user);
+
+	void addRegistrationActivity(
+			ActivityRegistrationDto activityRegistrationDto);
+
+	void addGuestsActivity(Integer id, User user);
     
 }
