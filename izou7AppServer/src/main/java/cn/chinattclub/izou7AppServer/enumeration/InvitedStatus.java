@@ -8,21 +8,23 @@ package cn.chinattclub.izou7AppServer.enumeration;
  */
 public enum InvitedStatus {
 
+	
+	UNSEND(0,"未发送"),
 	/**
 	 * 已发送申请或邀请
 	 */
-	SEND(0,"已发送"),
+	SEND(1,"已发送"),
 	
 	
 	/**
 	 * 同意
 	 */
-	AGREED(1,"同意"),
+	AGREED(2,"同意"),
 	
 	/**
 	 * 拒绝邀请或申请
 	 */
-	REFUSED(2,"拒绝");
+	REFUSED(3,"拒绝");
 	
 	private int value;
 	

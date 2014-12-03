@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import cn.chinattclub.izou7AppServer.entity.Activity;
+import cn.chinattclub.izou7AppServer.entity.ActivityCooperation;
 import cn.chinattclub.izou7AppServer.entity.ActivityGuests;
 import cn.chinattclub.izou7AppServer.entity.ActivityJoin;
 import cn.chinattclub.izou7AppServer.entity.Public;
@@ -26,12 +27,12 @@ import static cn.zy.commons.webdev.props.ApplicationConfiguration.getProperty;
  *
  */
 @Repository
-public class ActivityGuestsDao extends AdvancedHibernateDao<ActivityGuests>{
+public class ActivityCooperationDao extends AdvancedHibernateDao<ActivityCooperation>{
 
-	public boolean hasGuest(Activity activity, User user) {
-		Criteria criteria = this.getCurrentSession().createCriteria(ActivityGuests.class);
+	public boolean hasCooprated(Activity activity, String wechatId) {
+		Criteria criteria = this.getCurrentSession().createCriteria(ActivityCooperation.class);
 		criteria.add(Restrictions.eq("activity", activity));
-		criteria.add(Restrictions.eq("user", user.getId()));
+		criteria.add(Restrictions.eq("wechatId", wechatId));
 		return criteria.list().size()==0?false:true;
 	}
 

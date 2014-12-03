@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.chinattclub.izou7AppServer.dto.AcitivityCooperationDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityDetailInfoDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityInfoInListDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityRegistrationDto;
@@ -356,7 +357,47 @@ public class ActivityController {
 				msg = "用户不存在";
 				statusCode = ResponseStatusCode.FORBIDDEN;
 			}else{
-				activityServiceImpl.addGuestsActivity(id,user);
+				if(!activityServiceImpl.hasGuest(id,user)){
+					activityServiceImpl.addGuestsActivity(id,user);
+				}else{
+					logger.error("该用户已经申请过");
+					msg = "重复申请";
+					statusCode = ResponseStatusCode.FORBIDDEN;
+				}
+			}
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		return response;
+	}
+	
+	@RequestMapping(value="/public",method = RequestMethod.POST)
+	@ResponseBody
+	public RestResponse publicApply(@RequestBody AcitivityCooperationDto acitivityCooperationDto){
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "申请成功";
+		
+		try{
+			String token = request.getHeader("token");
+			User user = authenticateServiceImpl.getUserName(token);
+			if (user==null){	
+				logger.error("用户不存在");
+				msg = "用户不存在";
+				statusCode = ResponseStatusCode.FORBIDDEN;
+			}else{
+				if(!activityServiceImpl.hasPublicApplied(acitivityCooperationDto)){
+					activityServiceImpl.addApplyActivity(acitivityCooperationDto);
+				}else{
+					logger.error("该用户已经申请过");
+					msg = "重复申请过";
+					statusCode = ResponseStatusCode.FORBIDDEN;
+				}
 			}
 		}catch(Exception e){
 			msg = "内部错误";

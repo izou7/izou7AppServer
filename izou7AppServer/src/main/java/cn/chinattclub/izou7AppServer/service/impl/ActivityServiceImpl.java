@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import cn.chinattclub.izou7AppServer.dao.ActivityCooperationDao;
 import cn.chinattclub.izou7AppServer.dao.ActivityDao;
 import cn.chinattclub.izou7AppServer.dao.ActivityGuestsDao;
 import cn.chinattclub.izou7AppServer.dao.ActivityJoinDao;
@@ -17,9 +18,11 @@ import cn.chinattclub.izou7AppServer.dao.ActivityRegistrationDao;
 import cn.chinattclub.izou7AppServer.dao.PublicDao;
 import cn.chinattclub.izou7AppServer.dao.TokenDao;
 import cn.chinattclub.izou7AppServer.dao.UserDao;
+import cn.chinattclub.izou7AppServer.dto.AcitivityCooperationDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityRegistrationDto;
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
 import cn.chinattclub.izou7AppServer.entity.Activity;
+import cn.chinattclub.izou7AppServer.entity.ActivityCooperation;
 import cn.chinattclub.izou7AppServer.entity.ActivityGuests;
 import cn.chinattclub.izou7AppServer.entity.ActivityJoin;
 import cn.chinattclub.izou7AppServer.entity.ActivityRegistration;
@@ -27,6 +30,8 @@ import cn.chinattclub.izou7AppServer.entity.Public;
 import cn.chinattclub.izou7AppServer.entity.Token;
 import cn.chinattclub.izou7AppServer.entity.User;
 import cn.chinattclub.izou7AppServer.entity.UserInfo;
+import cn.chinattclub.izou7AppServer.enumeration.GuestRegistrationStatus;
+import cn.chinattclub.izou7AppServer.enumeration.InvitedStatus;
 import cn.chinattclub.izou7AppServer.service.ActivityService;
 import cn.chinattclub.izou7AppServer.service.UserService;
 import cn.chinattclub.izou7AppServer.util.HmacSHA256Utils;
@@ -54,6 +59,10 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Resource
 	private ActivityGuestsDao activityGuestsDao;
+	
+	@Resource
+	private ActivityCooperationDao activityCooperationDao;
+	
 	
 	@Override
 	public List<Activity> getActivityList(String text, Integer city, Date startTime,
@@ -140,6 +149,9 @@ public class ActivityServiceImpl implements ActivityService {
 		activityGuests.setUpdateTime(new Date());
 		activityGuests.setType(0);
 		activityGuests.setSource(false);
+		activityGuests.setRank(0);
+		activityGuests.setStatus(GuestRegistrationStatus.UNSEND);
+		activityGuests.setUser(user.getId());
 		
 		UserInfo userInfo = user.getUserInfo();
 		if (userInfo!=null){
@@ -161,5 +173,44 @@ public class ActivityServiceImpl implements ActivityService {
 		activityGuestsDao.save(activityGuests);
 		
 	}
+
+	@Override
+	public boolean hasGuest(Integer id, User user) {
+		Activity activity = activityDao.get(id);
+		return activityGuestsDao.hasGuest(activity, user);
+	}
+
+	@Override
+	public boolean hasPublicApplied(
+			AcitivityCooperationDto acitivityCooperationDto) {
+		Activity activity = activityDao.get(acitivityCooperationDto.getId());
+		return activityCooperationDao.hasCooprated(activity,acitivityCooperationDto.getPublicId());
+	}
+
+	@Override
+	public void addApplyActivity(AcitivityCooperationDto acitivityCooperationDto) throws Exception {
+		ActivityCooperation activityCooperation = new ActivityCooperation();
+		Activity activity = activityDao.get(acitivityCooperationDto.getId());
+		Public pub = publicDao.getByWechatId(acitivityCooperationDto.getPublicId());
+		
+		if (pub!=null){
+			activityCooperation.setActivity(activity);
+			activityCooperation.setCreateTime(new Date());
+			activityCooperation.setDescription(pub.getDescription());
+			activityCooperation.setPublicName(pub.getPublicName());
+			activityCooperation.setStatus(InvitedStatus.UNSEND);
+			activityCooperation.setTags(pub.getTags());
+			activityCooperation.setType(0);
+			activityCooperation.setUpdateTime(new Date());
+			activityCooperation.setWechatId(acitivityCooperationDto.getPublicId());
+			activityCooperationDao.save(activityCooperation);
+		}else{
+			throw new Exception("公众号不存在");
+		}
+		
+		
+		
+	}
+
 	
 }

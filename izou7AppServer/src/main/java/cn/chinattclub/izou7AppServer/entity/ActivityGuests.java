@@ -42,6 +42,7 @@ public class ActivityGuests {
 	@JoinColumn(name="activity")
 	private Activity activity;
 	
+	private Integer user;
 	/**
 	 * 发邀请排名
 	 */
@@ -463,5 +464,13 @@ public class ActivityGuests {
 	 */
 	public void setRank(Integer rank) {
 		this.rank = rank;
+	}
+
+	public Integer getUser() {
+		return user;
+	}
+
+	public void setUser(Integer user) {
+		this.user = user;
 	}
 }

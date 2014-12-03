@@ -24,5 +24,16 @@ public class PublicDao  extends AdvancedHibernateDao<Public>{
     	criteria.add(Restrictions.eq("user", user));
 		return criteria.list();
 	}
+
+	public Public getByWechatId(String publicId) {
+		Criteria criteria = this.getCurrentSession().createCriteria(
+				Public.class);
+    	criteria.add(Restrictions.eq("wechatId", publicId));
+    	List<Public> list = criteria.list();
+    	if (list==null || list.size()==0){
+    		return null;
+    	}
+		return list.get(0);
+	}
 	
 }

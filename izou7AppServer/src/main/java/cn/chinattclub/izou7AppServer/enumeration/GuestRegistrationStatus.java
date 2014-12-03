@@ -8,20 +8,21 @@ package cn.chinattclub.izou7AppServer.enumeration;
  */
 public enum GuestRegistrationStatus {
 
+	UNSEND(0,"未发申请"),
 	/**
 	 * 已发申请
 	 */
-	SEND(0,"已发申请"),
+	SEND(1,"已发申请"),
 	
 	/**
 	 * 通过
 	 */
-	PASSED(1,"通过"),
+	PASSED(2,"通过"),
 	
 	/**
 	 * 拒绝
 	 */
-	REFUSED(2,"拒绝");
+	REFUSED(3,"拒绝");
 	
 	
 	private int value;

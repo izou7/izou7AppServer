@@ -3,6 +3,7 @@ package cn.chinattclub.izou7AppServer.service;
 import java.util.Date;
 import java.util.List;
 
+import cn.chinattclub.izou7AppServer.dto.AcitivityCooperationDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityRegistrationDto;
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
 import cn.chinattclub.izou7AppServer.entity.Activity;
@@ -43,5 +44,12 @@ public interface ActivityService {
 			ActivityRegistrationDto activityRegistrationDto);
 
 	void addGuestsActivity(Integer id, User user);
+
+	boolean hasGuest(Integer id, User user);
+
+	boolean hasPublicApplied(AcitivityCooperationDto acitivityCooperationDto);
+
+	void addApplyActivity(AcitivityCooperationDto acitivityCooperationDto) throws Exception;
+
     
 }
