@@ -98,8 +98,18 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<PrivacySettings> privacySettings;
 	
-
+	@OneToMany(mappedBy ="user", cascade = CascadeType.ALL)
+	private List<ActivityCrowdfundingResult> activityCrowdfundingResult;
 	
+	public List<ActivityCrowdfundingResult> getActivityCrowdfundingResult() {
+		return activityCrowdfundingResult;
+	}
+
+	public void setActivityCrowdfundingResult(
+			List<ActivityCrowdfundingResult> activityCrowdfundingResult) {
+		this.activityCrowdfundingResult = activityCrowdfundingResult;
+	}
+
 	public UserInfo getUserInfo() {
 		return userInfo;
 	}

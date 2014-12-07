@@ -4,7 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import cn.chinattclub.izou7AppServer.dto.AcitivityCooperationDto;
+import cn.chinattclub.izou7AppServer.dto.AcitivityCrowdfundingDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityMessageInfoDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityMessagePostDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityRegistrationDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityScheduleInfoDto;
+import cn.chinattclub.izou7AppServer.dto.UserInfoInListDto;
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
 import cn.chinattclub.izou7AppServer.entity.Activity;
 import cn.chinattclub.izou7AppServer.entity.User;
@@ -50,6 +55,17 @@ public interface ActivityService {
 	boolean hasPublicApplied(AcitivityCooperationDto acitivityCooperationDto);
 
 	void addApplyActivity(AcitivityCooperationDto acitivityCooperationDto) throws Exception;
+
+	void addCrowdfunding(AcitivityCrowdfundingDto acitivityCrowdfundingDto, User user) throws Exception ;
+
+	List<UserInfoInListDto> getUserInfoInListDtoList(User user, Integer id);
+
+	List<ActivityScheduleInfoDto> getActivityScheduleInfoDtoList(Integer id);
+
+	List<ActivityMessageInfoDto> getActivityMessageInfoDtoList(Integer id,
+			Integer page);
+
+	void addMessage(User user, ActivityMessagePostDto activityMessagePostDto);
 
     
 }

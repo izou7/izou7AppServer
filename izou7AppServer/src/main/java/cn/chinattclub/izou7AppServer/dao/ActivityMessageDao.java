@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import cn.chinattclub.izou7AppServer.entity.Activity;
 import cn.chinattclub.izou7AppServer.entity.ActivityJoin;
+import cn.chinattclub.izou7AppServer.entity.ActivityMessage;
+import cn.chinattclub.izou7AppServer.entity.ActivitySchedule;
 import cn.chinattclub.izou7AppServer.entity.Public;
 import cn.chinattclub.izou7AppServer.entity.User;
 import cn.chinattclub.izou7AppServer.enumeration.InvitedStatus;
@@ -25,21 +27,19 @@ import static cn.zy.commons.webdev.props.ApplicationConfiguration.getProperty;
  *
  */
 @Repository
-public class ActivityJoinDao extends AdvancedHibernateDao<ActivityJoin>{
+public class ActivityMessageDao extends AdvancedHibernateDao<ActivityMessage>{
 
-	public boolean exists(Activity activity, User user) {
-		Criteria criteria = this.getCurrentSession().createCriteria(ActivityJoin.class);
-		criteria.add(Restrictions.eq("activity", activity));
-		criteria.add(Restrictions.eq("user", user));
-		return criteria.list().size()==0?false:true;
-	}
-
-	public List<ActivityJoin> getJoiners(Activity activity,User user) {
-		Criteria criteria = this.getCurrentSession().createCriteria(ActivityJoin.class);
-		criteria.add(Restrictions.eq("activity", activity));
-		criteria.add(Restrictions.ne("user", user));
+	public List<ActivityMessage> getByActivity(Integer id, Integer page) {
+		int pageNumber = StringUtils.isNotBlank(getProperty("page.default_size")) ? 
+				Integer.parseInt(getProperty("page.default_size")) : 10;
+		
+		Criteria criteria = this.getCurrentSession().createCriteria(ActivityMessage.class);
+		criteria.add(Restrictions.eq("activity", id));
+		
+		criteria.setFirstResult(pageNumber*page);
+		criteria.setMaxResults(pageNumber);
+		
 		return criteria.list();
 	}
-
 	
 }

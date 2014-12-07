@@ -11,21 +11,36 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import cn.chinattclub.izou7AppServer.dao.ActivityCooperationDao;
+import cn.chinattclub.izou7AppServer.dao.ActivityCrowdfundingResultDao;
+import cn.chinattclub.izou7AppServer.dao.ActivityCrowdfundingRewardSettingDao;
+import cn.chinattclub.izou7AppServer.dao.ActivityCrowdfundingSettingDao;
 import cn.chinattclub.izou7AppServer.dao.ActivityDao;
 import cn.chinattclub.izou7AppServer.dao.ActivityGuestsDao;
 import cn.chinattclub.izou7AppServer.dao.ActivityJoinDao;
+import cn.chinattclub.izou7AppServer.dao.ActivityMessageDao;
 import cn.chinattclub.izou7AppServer.dao.ActivityRegistrationDao;
+import cn.chinattclub.izou7AppServer.dao.ActivityScheduleDao;
 import cn.chinattclub.izou7AppServer.dao.PublicDao;
 import cn.chinattclub.izou7AppServer.dao.TokenDao;
 import cn.chinattclub.izou7AppServer.dao.UserDao;
 import cn.chinattclub.izou7AppServer.dto.AcitivityCooperationDto;
+import cn.chinattclub.izou7AppServer.dto.AcitivityCrowdfundingDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityMessageInfoDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityMessagePostDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityRegistrationDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityScheduleInfoDto;
+import cn.chinattclub.izou7AppServer.dto.UserInfoInListDto;
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
 import cn.chinattclub.izou7AppServer.entity.Activity;
 import cn.chinattclub.izou7AppServer.entity.ActivityCooperation;
+import cn.chinattclub.izou7AppServer.entity.ActivityCrowdfundingResult;
+import cn.chinattclub.izou7AppServer.entity.ActivityCrowdfundingRewardSetting;
+import cn.chinattclub.izou7AppServer.entity.ActivityCrowdfundingSetting;
 import cn.chinattclub.izou7AppServer.entity.ActivityGuests;
 import cn.chinattclub.izou7AppServer.entity.ActivityJoin;
+import cn.chinattclub.izou7AppServer.entity.ActivityMessage;
 import cn.chinattclub.izou7AppServer.entity.ActivityRegistration;
+import cn.chinattclub.izou7AppServer.entity.ActivitySchedule;
 import cn.chinattclub.izou7AppServer.entity.Public;
 import cn.chinattclub.izou7AppServer.entity.Token;
 import cn.chinattclub.izou7AppServer.entity.User;
@@ -63,6 +78,17 @@ public class ActivityServiceImpl implements ActivityService {
 	@Resource
 	private ActivityCooperationDao activityCooperationDao;
 	
+	@Resource
+	private ActivityCrowdfundingResultDao activityCrowdfundingResultDao;
+	
+	@Resource
+	private ActivityCrowdfundingRewardSettingDao activityCrowdfundingRewardSettingDao;
+	
+	@Resource
+	private ActivityScheduleDao activityScheduleDao;
+	
+	@Resource
+	private ActivityMessageDao activityMessageDao;
 	
 	@Override
 	public List<Activity> getActivityList(String text, Integer city, Date startTime,
@@ -210,6 +236,89 @@ public class ActivityServiceImpl implements ActivityService {
 		
 		
 		
+	}
+
+	@Override
+	public void addCrowdfunding(
+			AcitivityCrowdfundingDto acitivityCrowdfundingDto, User user) throws Exception {
+		ActivityCrowdfundingRewardSetting activityCrowdfundingRewardSetting = activityCrowdfundingRewardSettingDao.get(acitivityCrowdfundingDto.getId());
+		if (activityCrowdfundingRewardSetting.getRewardStartTime().after(new Date()) || activityCrowdfundingRewardSetting.getRewardEndTime().before(new Date())){
+			throw new Exception ("当前日期无法众筹");
+		}
+		
+		
+		ActivityCrowdfundingResult activityCrowdfundingResult = new ActivityCrowdfundingResult();
+		
+		activityCrowdfundingResult.setUser(user);
+		activityCrowdfundingResult.setCrowdfunding(activityCrowdfundingRewardSetting);
+		activityCrowdfundingResult.setAccountInfo(acitivityCrowdfundingDto.getAccountInfo());
+		activityCrowdfundingResultDao.save(activityCrowdfundingResult);
+	}
+
+	@Override
+	public List<UserInfoInListDto> getUserInfoInListDtoList(User user, Integer id) {
+		Activity activity = activityDao.get(id);
+		List<ActivityJoin> activityJoinList = activityJoinDao.getJoiners(activity,user);
+		List<UserInfoInListDto> userInfoInListDtoList = new ArrayList<UserInfoInListDto>();
+		for (ActivityJoin activityJoin:activityJoinList){
+			UserInfoInListDto userInfoInListDto = new UserInfoInListDto();
+			userInfoInListDto.setUserId(activityJoin.getUser().getId());
+			userInfoInListDto.setUserName(activityJoin.getUser().getUsername());
+			userInfoInListDto.setIntroduction(activityJoin.getUser().getUserInfo().getIntroduction());
+			userInfoInListDto.setHeadPicture(activityJoin.getUser().getUserInfo().getHeadPicture());
+			userInfoInListDto.setHeadPictureUrl(activityJoin.getUser().getUserInfo().getHeadPictureUrl());
+			userInfoInListDto.setConcerned(false);
+			userInfoInListDto.setSuggest(false);
+			userInfoInListDtoList.add(userInfoInListDto);
+		}
+		return userInfoInListDtoList;
+	}
+
+	@Override
+	public List<ActivityScheduleInfoDto> getActivityScheduleInfoDtoList(
+			Integer id) {
+		Activity activity = activityDao.get(id);
+		List<ActivitySchedule> activityScheduleList= activityScheduleDao.getByActivity(activity);
+		
+		List<ActivityScheduleInfoDto> activityScheduleInfoDtoList = new ArrayList<ActivityScheduleInfoDto>();
+		for (ActivitySchedule activitySchedule:activityScheduleList){
+			ActivityScheduleInfoDto activityScheduleInfoDto = new ActivityScheduleInfoDto();
+			activityScheduleInfoDto.setContent(activitySchedule.getContent());
+			activityScheduleInfoDto.setStartTime(activitySchedule.getStartTime());
+			activityScheduleInfoDto.setEndTime(activitySchedule.getEndTime());
+			activityScheduleInfoDtoList.add(activityScheduleInfoDto);
+		}
+		return activityScheduleInfoDtoList;
+	}
+
+	@Override
+	public List<ActivityMessageInfoDto> getActivityMessageInfoDtoList(
+			Integer id, Integer page) {
+		List<ActivityMessage> activityMessageList = activityMessageDao.getByActivity(id, page);
+		
+		List<ActivityMessageInfoDto> activityMessageInfoDtoList = new ArrayList<ActivityMessageInfoDto>();
+		
+		for(ActivityMessage activityMessage:activityMessageList){
+			ActivityMessageInfoDto activityMessageInfoDto = new ActivityMessageInfoDto();
+			activityMessageInfoDto.setUserId(activityMessage.getUser().getId());
+			activityMessageInfoDto.setMessage(activityMessage.getMessage());
+			activityMessageInfoDto.setMessageTime(activityMessage.getCreateTime());
+			activityMessageInfoDto.setHeadPicture(activityMessage.getUser().getUserInfo().getHeadPicture());
+			activityMessageInfoDto.setHeadPictureUrl(activityMessage.getUser().getUserInfo().getHeadPictureUrl());
+			activityMessageInfoDtoList.add(activityMessageInfoDto);
+		}
+		return activityMessageInfoDtoList;
+	}
+
+	@Override
+	public void addMessage(User user,
+			ActivityMessagePostDto activityMessagePostDto) {
+		ActivityMessage activityMessage = new ActivityMessage();
+		activityMessage.setActivity(activityMessagePostDto.getId());
+		activityMessage.setMessage(activityMessagePostDto.getMessage());
+		activityMessage.setUser(user);
+		activityMessage.setCreateTime(new Date());
+		activityMessageDao.save(activityMessage);
 	}
 
 	

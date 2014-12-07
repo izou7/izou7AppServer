@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import cn.chinattclub.izou7AppServer.entity.Activity;
 import cn.chinattclub.izou7AppServer.entity.ActivityJoin;
+import cn.chinattclub.izou7AppServer.entity.ActivitySchedule;
 import cn.chinattclub.izou7AppServer.entity.Public;
 import cn.chinattclub.izou7AppServer.entity.User;
 import cn.chinattclub.izou7AppServer.enumeration.InvitedStatus;
@@ -25,21 +26,12 @@ import static cn.zy.commons.webdev.props.ApplicationConfiguration.getProperty;
  *
  */
 @Repository
-public class ActivityJoinDao extends AdvancedHibernateDao<ActivityJoin>{
+public class ActivityScheduleDao extends AdvancedHibernateDao<ActivitySchedule>{
 
-	public boolean exists(Activity activity, User user) {
-		Criteria criteria = this.getCurrentSession().createCriteria(ActivityJoin.class);
+	public List<ActivitySchedule> getByActivity(Activity activity) {
+		Criteria criteria = this.getCurrentSession().createCriteria(ActivitySchedule.class);
 		criteria.add(Restrictions.eq("activity", activity));
-		criteria.add(Restrictions.eq("user", user));
-		return criteria.list().size()==0?false:true;
-	}
-
-	public List<ActivityJoin> getJoiners(Activity activity,User user) {
-		Criteria criteria = this.getCurrentSession().createCriteria(ActivityJoin.class);
-		criteria.add(Restrictions.eq("activity", activity));
-		criteria.add(Restrictions.ne("user", user));
 		return criteria.list();
 	}
-
 	
 }

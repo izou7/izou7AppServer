@@ -1,7 +1,9 @@
 package cn.chinattclub.izou7AppServer.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import cn.chinattclub.izou7AppServer.enumeration.CrowdfundingStatus;
@@ -97,6 +100,108 @@ public class ActivityCrowdfundingSetting {
 	 */
 	@Column(name = "update_time", insertable = false, updatable = false)
 	private Date updateTime;
+
+	
+	public Activity getActivity() {
+		return activity;
+	}
+
+	public void setActivity(Activity activity) {
+		this.activity = activity;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	public Integer getHighLines() {
+		return highLines;
+	}
+
+	public void setHighLines(Integer highLines) {
+		this.highLines = highLines;
+	}
+
+	public Integer getGotAmount() {
+		return gotAmount;
+	}
+
+	public void setGotAmount(Integer gotAmount) {
+		this.gotAmount = gotAmount;
+	}
+
+	public Integer getDays() {
+		return days;
+	}
+
+	public void setDays(Integer days) {
+		this.days = days;
+	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public Integer getAccountBank() {
+		return accountBank;
+	}
+
+	public void setAccountBank(Integer accountBank) {
+		this.accountBank = accountBank;
+	}
+
+	public String getSubBank() {
+		return subBank;
+	}
+
+	public void setSubBank(String subBank) {
+		this.subBank = subBank;
+	}
+
+	public CrowdfundingStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(CrowdfundingStatus status) {
+		this.status = status;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	/**
 	 * Returns the value of the field called 'id'.

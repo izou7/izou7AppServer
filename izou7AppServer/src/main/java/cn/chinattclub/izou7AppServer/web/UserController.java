@@ -321,7 +321,7 @@ public class UserController {
 			  }
 			  
 		  }catch(Exception e){
-			  msg = "内部错误";
+			  msg = e.getLocalizedMessage();
 			  statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
 			  logger.error(e.getMessage());
 		  }

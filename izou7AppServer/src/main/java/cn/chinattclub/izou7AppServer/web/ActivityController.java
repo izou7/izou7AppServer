@@ -29,9 +29,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.chinattclub.izou7AppServer.dto.AcitivityCooperationDto;
+import cn.chinattclub.izou7AppServer.dto.AcitivityCrowdfundingDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityDetailInfoDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityInfoInListDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityMessageInfoDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityMessagePostDto;
 import cn.chinattclub.izou7AppServer.dto.ActivityRegistrationDto;
+import cn.chinattclub.izou7AppServer.dto.ActivityScheduleInfoDto;
+import cn.chinattclub.izou7AppServer.dto.UserInfoInListDto;
 import cn.chinattclub.izou7AppServer.dto.UserLoginDto;
 import cn.chinattclub.izou7AppServer.entity.Activity;
 import cn.chinattclub.izou7AppServer.entity.User;
@@ -409,4 +414,137 @@ public class ActivityController {
 		return response;
 	}
 	
+	@RequestMapping(value="/crowdfunding",method = RequestMethod.POST)
+	@ResponseBody
+	public RestResponse crowdfunding(@RequestBody AcitivityCrowdfundingDto acitivityCrowdfundingDto){
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "选择成功";
+		
+		try{
+			String token = request.getHeader("token");
+			User user = authenticateServiceImpl.getUserName(token);
+			if (user==null){	
+				logger.error("用户不存在");
+				msg = "用户不存在";
+				statusCode = ResponseStatusCode.FORBIDDEN;
+			}else{
+				activityServiceImpl.addCrowdfunding(acitivityCrowdfundingDto,user);
+			}
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		return response;
+	}
+	
+	@RequestMapping(value="/joiners",method = RequestMethod.GET)
+	@ResponseBody
+	public RestResponse joiners(@RequestParam Integer id){
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "获取成功";
+		
+		List<UserInfoInListDto> userInfoInListDtoList = new ArrayList<UserInfoInListDto>(); 
+		
+		try{
+			String token = request.getHeader("token");
+			User user = authenticateServiceImpl.getUserName(token);
+			if (user==null){	
+				logger.error("用户不存在");
+				msg = "用户不存在";
+				statusCode = ResponseStatusCode.FORBIDDEN;
+			}else{
+				userInfoInListDtoList = activityServiceImpl.getUserInfoInListDtoList(user,id);
+			}
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		response.getBody().put("data", userInfoInListDtoList);
+		return response;
+	}
+	
+	@RequestMapping(value="/schedules",method = RequestMethod.GET)
+	@ResponseBody
+	public RestResponse schedules(@RequestParam Integer id){
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "获取成功";
+		
+		List<ActivityScheduleInfoDto> activityScheduleInfoDtoList = new ArrayList<ActivityScheduleInfoDto>(); 
+		
+		try{
+			activityScheduleInfoDtoList = activityServiceImpl.getActivityScheduleInfoDtoList(id);
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		response.getBody().put("data", activityScheduleInfoDtoList);
+		return response;
+	}
+	
+	@RequestMapping(value="/messages",method = RequestMethod.GET)
+	@ResponseBody
+	public RestResponse messages(@RequestParam Integer id, Integer page){
+		page = page==null?0:page;
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "获取成功";
+		
+		List<ActivityMessageInfoDto> activityMessageInfoDtoList = new ArrayList<ActivityMessageInfoDto>(); 
+		
+		try{
+			activityMessageInfoDtoList = activityServiceImpl.getActivityMessageInfoDtoList(id,page);
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		response.getBody().put("data", activityMessageInfoDtoList);
+		return response;
+	}
+	
+	@RequestMapping(value="/message",method = RequestMethod.POST)
+	@ResponseBody
+	public RestResponse message(@RequestBody ActivityMessagePostDto activityMessagePostDto){
+		
+		RestResponse response = new RestResponse();
+		int statusCode = ResponseStatusCode.OK;
+		String msg = "提交成功";
+		
+		try{
+			String token = request.getHeader("token");
+			User user = authenticateServiceImpl.getUserName(token);
+			if (user==null){	
+				logger.error("用户不存在");
+				msg = "用户不存在";
+				statusCode = ResponseStatusCode.FORBIDDEN;
+			}else{
+				activityServiceImpl.addMessage(user,activityMessagePostDto);
+			}
+		}catch(Exception e){
+			msg = "内部错误";
+			statusCode = ResponseStatusCode.INTERNAL_SERVER_ERROR;
+			logger.error(e.getMessage());
+		}
+		response.setMessage(msg);
+		response.setStatusCode(statusCode);
+		return response;
+	}
 }
